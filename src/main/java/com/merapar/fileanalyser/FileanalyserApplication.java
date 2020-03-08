@@ -6,8 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class FileanalyserApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(FileanalyserApplication.class, args);
-    }
-
+  public static void main(String[] args) {
+    SpringApplication.run(FileanalyserApplication.class, args);
+  }
 }
