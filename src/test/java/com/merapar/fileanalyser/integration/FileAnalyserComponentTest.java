@@ -5,14 +5,16 @@ import com.merapar.fileanalyser.request.ImmutableProcessFileRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
-import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.Header;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.core.io.Resource;
+import org.springframework.test.context.TestPropertySource;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,11 +30,16 @@ import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@TestPropertySource("classpath:application-test.properties")
 class FileAnalyserComponentTest {
 
-  @LocalServerPort private int port;
+  @LocalServerPort int port;
+
+  @Value("classpath:posts.xml")
+  Resource resourceFile;
+
+  private final int mockPort = 8089;
 
   private MockServerClient client;
 
@@ -40,16 +47,16 @@ class FileAnalyserComponentTest {
 
   @BeforeEach
   void setUp() {
-    client = startClientAndServer(8089);
+    client = startClientAndServer(mockPort);
     RestAssured.defaultParser = Parser.JSON;
   }
 
   @Test
   void givenValidXmlInRequestShouldReturnStatusCodeOkAndFileDetails() throws IOException {
     // given
-    File file = new File(getClass().getClassLoader().getResource("posts.xml").getFile());
-    String xmlResponse = new String(Files.readAllBytes(Paths.get(file.getPath())));
-    String url = "http://localhost:8089/test.xml";
+    File file = resourceFile.getFile();
+    String xmlResponse = new String(Files.readAllBytes(Paths.get(file.toURI().getPath())), "UTF-8");
+    String url = String.format("http://localhost:%s%s", mockPort, "/test.xml");
     ImmutableProcessFileRequest processFileRequest = ImmutableProcessFileRequest.of(url);
 
     client
@@ -85,7 +92,7 @@ class FileAnalyserComponentTest {
         .body("details.avgScore", is(2.5f));
   }
 
-  @AfterAll
+  @AfterEach
   void tearDown() {
     client.stop();
   }
