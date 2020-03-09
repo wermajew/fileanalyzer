@@ -10,12 +10,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import java.util.function.Predicate;
 
 @Service
 @Scope(value = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -27,26 +26,30 @@ public class FileProcessorService {
 
   private final StatisticsProcessor statisticsProcessor;
 
-  private final Unmarshaller unmarshaller;
+  private final PostUnmarshaller unmarshaller;
 
   private final ReaderService readerService;
 
-  public FileProcessorService(ReaderService readerService, StatisticsProcessor statisticsProcessor)
-      throws JAXBException {
+  private final Predicate<XMLStreamReader> canProcessElement =
+      e ->
+          e.getEventType() == XMLStreamConstants.START_ELEMENT && ROW_NAME.equals(e.getLocalName());
+
+  public FileProcessorService(
+      ReaderService readerService,
+      StatisticsProcessor statisticsProcessor,
+      PostUnmarshaller unmarshaller) {
     this.readerService = readerService;
-    this.unmarshaller = JAXBContext.newInstance(Post.class).createUnmarshaller();
     this.statisticsProcessor = statisticsProcessor;
+    this.unmarshaller = unmarshaller;
   }
 
-  public FileDetails processFile(String file) {
+  public FileDetails processFile(final String file) {
     try {
       final XMLStreamReader eventReader = readerService.getEventReader(file);
-      statisticsProcessor.setFileDetails(FileDetails.of());
       while (eventReader.hasNext()) {
         eventReader.next();
-        if (eventReader.getEventType() == XMLStreamConstants.START_ELEMENT
-            && ROW_NAME.equals(eventReader.getLocalName())) {
-          final Post post = unmarshaller.unmarshal(eventReader, Post.class).getValue();
+        if (canProcessElement.test(eventReader)) {
+          final Post post = unmarshaller.unmarshal(eventReader);
           statisticsProcessor.process(post);
         }
       }
