@@ -2,10 +2,8 @@ package com.merapar.fileanalyser.controller;
 
 import com.merapar.fileanalyser.request.ImmutableProcessFileRequest;
 import com.merapar.fileanalyser.response.FileDetails;
-import com.merapar.fileanalyser.response.FileDetailsResponse;
 import com.merapar.fileanalyser.response.ImmutableFileDetailsResponse;
 import com.merapar.fileanalyser.service.FileProcessorService;
-import com.merapar.fileanalyser.service.PostsStatisticsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +27,13 @@ public class FileAnalyzerController {
   }
 
   @RequestMapping(value = "/analyze", method = RequestMethod.POST)
-  public FileDetailsResponse analyzeFile(
+  public ImmutableFileDetailsResponse analyzeFile(
       @RequestBody ImmutableProcessFileRequest processFileRequest) {
     LOG.info("Process file request: {}", processFileRequest);
     LocalDateTime now = LocalDateTime.now();
-    FileDetails fileDetails =
-        fileProcessorService.processFile(processFileRequest.url(), new PostsStatisticsService());
-    return ImmutableFileDetailsResponse.of(now, fileDetails);
+    FileDetails fileDetails = fileProcessorService.processFile(processFileRequest.url());
+    ImmutableFileDetailsResponse response = ImmutableFileDetailsResponse.of(now, fileDetails);
+    LOG.info("Calculated result {}", fileDetails);
+    return response;
   }
 }

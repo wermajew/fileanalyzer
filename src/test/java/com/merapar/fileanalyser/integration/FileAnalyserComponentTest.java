@@ -2,6 +2,9 @@ package com.merapar.fileanalyser.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.merapar.fileanalyser.request.ImmutableProcessFileRequest;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import io.restassured.parsing.Parser;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +20,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
-import static io.restassured.RestAssured.when;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -30,11 +36,12 @@ class FileAnalyserComponentTest {
 
   private MockServerClient client;
 
-  final ObjectMapper objectMapper = new ObjectMapper();
+  private final ObjectMapper objectMapper = new ObjectMapper();
 
   @BeforeEach
   void setUp() {
     client = startClientAndServer(8089);
+    RestAssured.defaultParser = Parser.JSON;
   }
 
   @Test
@@ -46,12 +53,7 @@ class FileAnalyserComponentTest {
     ImmutableProcessFileRequest processFileRequest = ImmutableProcessFileRequest.of(url);
 
     client
-        .when(
-            request()
-                .withMethod("POST")
-                .withPath("/test.xml")
-                .withHeader("Content-Type", "application/json")
-                .withBody(objectMapper.writeValueAsString(processFileRequest)))
+        .when(request().withMethod("GET").withPath("/test.xml"))
         .respond(
             response()
                 .withStatusCode(200)
@@ -61,12 +63,26 @@ class FileAnalyserComponentTest {
                 .withBody(xmlResponse)
                 .withDelay(TimeUnit.SECONDS, 1));
 
-    // when
-    when()
-        .post(String.format("http://localhost:%s/analyze", port))
+    // when, then
+    given()
+        .baseUri(String.format("http://localhost:%s", port))
+        .header("Content-Type", "application/json")
+        .body(objectMapper.writeValueAsBytes(processFileRequest))
+        .contentType(ContentType.JSON)
+        .when()
+        .post("/analyze")
         .then()
-        .assertThat()
-        .statusCode(200);
+        .log()
+        .all()
+        .and()
+        .statusCode(200)
+        .and()
+        .body("analyseDate", notNullValue())
+        .body("details", notNullValue())
+        .body("details.totalPosts", equalTo(8))
+        .body("details.totalScore", equalTo(20))
+        .body("details.totalAcceptedPosts", equalTo(1))
+        .body("details.avgScore", is(2.5f));
   }
 
   @AfterAll

@@ -1,6 +1,6 @@
 package com.merapar.fileanalyser.exception;
 
-public class ResourceUnavailableException extends Exception {
+public class ResourceUnavailableException extends RuntimeException {
 
   public ResourceUnavailableException(String errorMessage) {
     super(errorMessage);

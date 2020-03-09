@@ -26,6 +26,11 @@ public interface FileDetails {
   }
 
   @Value.Default
+  default BigInteger totalScore() {
+    return BigInteger.ZERO;
+  }
+
+  @Value.Default
   default BigInteger totalAcceptedPosts() {
     return BigInteger.ZERO;
   }
@@ -37,10 +42,12 @@ public interface FileDetails {
 
   static FileDetails of(FileDetails f) {
     return ImmutableFileDetails.builder()
-        .avgScore(f.avgScore())
+        .avgScore(f.totalScore().doubleValue() / f.totalPosts().doubleValue())
         .firstPost(f.firstPost())
         .lastPost(f.lastPost())
         .totalPosts(f.totalPosts())
+        .totalAcceptedPosts(f.totalAcceptedPosts())
+        .totalScore(f.totalScore())
         .build();
   }
 
