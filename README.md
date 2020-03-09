@@ -8,7 +8,6 @@ A distributable docker container running the server (Bonus)
 - A POST request should be possible with a url to an XML file (this file can be > 1GB)
 - The response of the post request should hold an overview of the analysation of the XML (see example below, feel free to add more fields).
 - The code should be unit and component tested.
-- Place the code on github account for review.
 - The code should pass the maven build and be runnable via cli with max of 512MB of memory.
 At least a single Java 8 feature should be included.
 
