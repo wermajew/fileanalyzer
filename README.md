@@ -35,3 +35,7 @@ At least a single Java 8 feature should be included.
 ## Run application
 Latest image will be pulled from Docker Hub. 
 Just copy docker-compose.yml and run ``docker-compose up -d``
+
+## Ideas for improvements
+- Service has been impemented accordingly to specified contract so solution is synchronous but to prevent requests that take up to several minutes, asynchronous implementation could be used
+- Storing information about processed file to prevent calculating same file (based on some assumtions like: file size, given file from particular uri and size has been processed, returned persisted data about file details)
