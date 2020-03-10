@@ -1,8 +1,8 @@
 language: java
 jdk: openjdk8
-sudo: false
 env:
   global:
+  - DOCKER_REPOSITORY=wermajew/fileanalyzer:latest
   - secure: N8/hm0T1E+c4W2IbD1COEtmIQ0DN3m7t0eB81CyYBoHxyqdZgblyPXkcXe8r3HvmDE+xXPpiPrmuQmoSkKOrw47PIEBgEpmVAF0kadhUIDd8slZ33E/AcHEh7jFmTsJ1a9jl/gJ6O5YbMyfdVkfj18YtKr4Uwheb1ReBA5cDYIkaQVvYm/qs69JQK0BPDgsuqMWePpLl8CKQTIlU8V7cFj/1vbHjeg6PlauUfj8hHAvY0K9Hf2Gra+PDqFzo3MNPAQEynEL0RkuYILut84uZxUgm/FsqujkTkgv8225ArDQioXvCJ/RmvQVwaZsLje2uytl3OZ5LEj9rcnycTNt0f5dngqJBsN6eVqSE7wXXsfWxYyogQlk5CkFyN2PgSfSXEIEsEfsI4zYSKhu77Ip1DEj68+tDK6gbQsl/+DDv9KPWGXYbEg04UoDNW5TCCmrhRq/77LYpARXiP6RzJFx2QqkyaCGvPR7weRR1hM7eU3i6WELrIx7kVpoh2Sd10N3MhYz2XmhXW0Gka1D8UemuzUkJ8zzLhEQejrey0lPT1r8KsIKaqekb+jdg+cZ9fsNjsMxCtqZc2XbK08o/gTJpHrBGGJuXJmmqgUCWgedLvlUJiEqAfHpO1B/wHhn8MV82lLBWfD6+V8KrW/uf3EhlFzh1sulxtC18QupVNnI3hDA=
   - secure: CF5hdFUxFOnxkozCZ8iDZHlmYGxumsBChC9kr+Lz20fxqNSkGFbycoyD1i7tsDCauX+vJGaIhx5XnRppUJIirNWnbQ9WutmNMqcahn6YSAHM4kRpKZGBQQ3vHOx2NmTmS+Kefj8H+LtRj4WI5Gcaj7CJ/FUMYNf8UB4AU8DyfTaEBnCFqPopJUnIL30/3+iQ+5QoBwuyBiiLuha/whnIiehJslrUnZ8PHbOqoMf2fkJ1F15ojN3qFXrlPqwszuqdwNbKuUep4oCxFSF7PQab5O2RXymo2WlWwXHALoQAeNPGQo6MJKp5eq6wV4SNg8yGJfCKVLnmD8hi7BJ69wc7/nUmSHT+mfL3+6PiwGO50bnrfaHbNH4lhA1s7hCldrdfb7/KvFMsu9jdWZFui9WgvyLIejxKP8lDrbb5J0aefOawXRJymz/vIYrtnlhzrUkApQ4tFzJUcm+YaqJFBET7ay4bYe8ftM58M3HDmXBvy93InynIYXoc+ULSAineFO+LHw4FHDqZNozWn0U6HAvx5nwQNncVhcLo3tX5qNdBTAYlUpgZy8k1Ove7tCFiCUVEKKPgAv0fP8c9TH4/sJYFb/oxt1wrBFGJyEcPQnB1vvKk8CfgK5RUEtllWhiWf99zTiLu39904rG/8nqgntq/6sA9bnRXGFsnEPM7FuzDNcY=
 script:
@@ -10,11 +10,11 @@ script:
 - mvn package
 before_deploy:
 - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
-- docker build . -t "wermajew/gateway:latest"
+- docker build . -t "$DOCKER_REPOSITORY"
 - docker images
 deploy:
   provider: script
-  script: docker push "wermajew/gateway:latest"
+  script: docker push "$DOCKER_REPOSITORY"
   on:
     branch: master
 services:
