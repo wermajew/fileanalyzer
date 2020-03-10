@@ -27,11 +27,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class FileAnalyzerControllerTest {
 
-  @Autowired private MockMvc mockMvc;
-
-  @MockBean private FileProcessorService fileProcessorService;
-
   private final ObjectMapper objectMapper = new ObjectMapper();
+  @Autowired private MockMvc mockMvc;
+  @MockBean private FileProcessorService fileProcessorService;
 
   @Test
   void givenUrlProvidedShouldReturn200Ok() throws Exception {

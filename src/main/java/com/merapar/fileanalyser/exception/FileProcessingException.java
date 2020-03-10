@@ -6,8 +6,7 @@ public class FileProcessingException extends RuntimeException {
     super(errorMessage);
   }
 
-  public static FileProcessingException fromResource(String file)
-      throws FileProcessingException {
+  public static FileProcessingException fromResource(String file) throws FileProcessingException {
     throw new FileProcessingException("Could not process file " + file);
   }
 }

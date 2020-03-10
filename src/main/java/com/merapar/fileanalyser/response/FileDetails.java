@@ -10,6 +10,21 @@ import java.time.LocalDateTime;
 @JsonSerialize(as = ImmutableFileDetails.class)
 public interface FileDetails {
 
+  static FileDetails of(FileDetails f) {
+    return ImmutableFileDetails.builder()
+        .avgScore(f.totalScore().doubleValue() / f.totalPosts().doubleValue())
+        .firstPost(f.firstPost())
+        .lastPost(f.lastPost())
+        .totalPosts(f.totalPosts())
+        .totalAcceptedPosts(f.totalAcceptedPosts())
+        .totalScore(f.totalScore())
+        .build();
+  }
+
+  static FileDetails of() {
+    return ImmutableFileDetails.builder().build();
+  }
+
   @Value.Default
   default LocalDateTime firstPost() {
     return LocalDateTime.MAX;
@@ -38,20 +53,5 @@ public interface FileDetails {
   @Value.Default
   default Double avgScore() {
     return (double) 0;
-  }
-
-  static FileDetails of(FileDetails f) {
-    return ImmutableFileDetails.builder()
-        .avgScore(f.totalScore().doubleValue() / f.totalPosts().doubleValue())
-        .firstPost(f.firstPost())
-        .lastPost(f.lastPost())
-        .totalPosts(f.totalPosts())
-        .totalAcceptedPosts(f.totalAcceptedPosts())
-        .totalScore(f.totalScore())
-        .build();
-  }
-
-  static FileDetails of() {
-    return ImmutableFileDetails.builder().build();
   }
 }
