@@ -19,8 +19,6 @@ public class FileProcessorService {
 
   private static final Logger LOG = LoggerFactory.getLogger(FileProcessorService.class);
 
-  private static final String ROW_NAME = "row";
-
   private final StatisticsProcessor statisticsProcessor;
 
   private final PostUnmarshaller unmarshaller;

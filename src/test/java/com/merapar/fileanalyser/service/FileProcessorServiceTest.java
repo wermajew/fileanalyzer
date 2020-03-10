@@ -10,6 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import java.math.BigInteger;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -29,11 +31,29 @@ class FileProcessorServiceTest {
 
   @Mock private StatisticsProcessor statisticsProcessor;
 
+  @Mock private XMLStreamReader eventReaderMock;
+
   @Test
-  void givenFileCanBeReadAndXmlParsedShouldReturnFileDetails() {
+  void givenFileCanBeReadAndXmlParsedShouldReturnFileDetails() throws XMLStreamException {
     // given
-    //  when
+    String file = "http://test.com/test.xml";
+    Post post = new Post();
+    post.setAcceptedAnswerId(BigInteger.valueOf(12));
+    post.setScore(BigInteger.valueOf(13));
+    post.setCreationDate(LocalDateTime.of(2021, 1, 2, 12, 20));
+
+    // when
+    when(readerService.getEventReader(file)).thenReturn(eventReaderMock);
+    when(eventReaderMock.hasNext()).thenReturn(true, true, false);
+    when(eventReaderMock.next()).thenReturn(1);
+    when(readerService.canReadElement(eventReaderMock)).thenReturn(true);
+    when(postUnmarshaller.unmarshal(eventReaderMock)).thenReturn(post);
+
+    fileProcessorService.processFile(file);
+
     // then
+    verify(statisticsProcessor, times(2)).process(post);
+    verify(statisticsProcessor, times(1)).getFileDetails();
   }
 
   @Test
