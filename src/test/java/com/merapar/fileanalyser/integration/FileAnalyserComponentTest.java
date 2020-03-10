@@ -34,16 +34,12 @@ import static org.mockserver.model.HttpResponse.response;
 @TestPropertySource("classpath:application-test.properties")
 class FileAnalyserComponentTest {
 
+  private final int mockPort = 8089;
+  private final ObjectMapper objectMapper = new ObjectMapper();
   @LocalServerPort int port;
-
   @Value("classpath:posts.xml")
   Resource resourceFile;
-
-  private final int mockPort = 8089;
-
   private MockServerClient client;
-
-  private final ObjectMapper objectMapper = new ObjectMapper();
 
   @BeforeEach
   void setUp() {

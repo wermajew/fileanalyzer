@@ -34,20 +34,20 @@ public class Post {
     return score;
   }
 
-  public BigInteger getAcceptedAnswerId() {
-    return acceptedAnswerId;
-  }
-
-  public LocalDateTime getCreationDate() {
-    return creationDate;
-  }
-
   public void setScore(BigInteger score) {
     this.score = score;
   }
 
+  public BigInteger getAcceptedAnswerId() {
+    return acceptedAnswerId;
+  }
+
   public void setAcceptedAnswerId(BigInteger acceptedAnswerId) {
     this.acceptedAnswerId = acceptedAnswerId;
+  }
+
+  public LocalDateTime getCreationDate() {
+    return creationDate;
   }
 
   public void setCreationDate(LocalDateTime creationDate) {

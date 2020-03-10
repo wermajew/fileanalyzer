@@ -36,9 +36,8 @@ public class StatisticsProcessor {
     this.fileDetails = FileDetails.of();
   }
 
-  public FileDetails process(Post post) {
+  public void process(Post post) {
     statisticsCalculators.forEach(i -> fileDetails = i.calculate(post, fileDetails));
-    return fileDetails;
   }
 
   public FileDetails getFileDetails() {

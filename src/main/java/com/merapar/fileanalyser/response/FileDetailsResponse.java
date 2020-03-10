@@ -9,13 +9,13 @@ import java.time.LocalDateTime;
 @JsonSerialize(as = ImmutableFileDetailsResponse.class)
 public interface FileDetailsResponse {
 
+  static FileDetailsResponse of(LocalDateTime localDateTime, FileDetails fileDetails) {
+    return ImmutableFileDetailsResponse.of(localDateTime, fileDetails);
+  }
+
   @Value.Parameter
   LocalDateTime analyseDate();
 
   @Value.Parameter
   FileDetails details();
-
-  static FileDetailsResponse of(LocalDateTime localDateTime, FileDetails fileDetails) {
-    return ImmutableFileDetailsResponse.of(localDateTime, fileDetails);
-  }
 }
