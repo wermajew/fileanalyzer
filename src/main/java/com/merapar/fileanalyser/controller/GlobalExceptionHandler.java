@@ -1,6 +1,6 @@
 package com.merapar.fileanalyser.controller;
 
-import com.merapar.fileanalyser.exception.FileUnprocessableException;
+import com.merapar.fileanalyser.exception.FileProcessingException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-  @ExceptionHandler(FileUnprocessableException.class)
+  @ExceptionHandler(FileProcessingException.class)
   protected ResponseEntity<Object> handleError(RuntimeException ex, WebRequest request) {
     String bodyOfResponse = "Could not process file";
     return handleExceptionInternal(

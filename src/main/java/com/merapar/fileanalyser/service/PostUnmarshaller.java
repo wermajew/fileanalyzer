@@ -1,6 +1,7 @@
 package com.merapar.fileanalyser.service;
 
 import com.merapar.fileanalyser.domain.Post;
+import com.merapar.fileanalyser.exception.FileProcessingException;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
@@ -20,7 +21,11 @@ public class PostUnmarshaller {
     this.unmarshaller = JAXBContext.newInstance(Post.class).createUnmarshaller();
   }
 
-  public Post unmarshal(XMLStreamReader eventReader) throws JAXBException {
-    return unmarshaller.unmarshal(eventReader, Post.class).getValue();
+  public Post unmarshal(XMLStreamReader eventReader) {
+    try {
+      return unmarshaller.unmarshal(eventReader, Post.class).getValue();
+    } catch (JAXBException e) {
+      throw new FileProcessingException("Could not process element " + eventReader.getLocalName());
+    }
   }
 }

@@ -1,7 +1,7 @@
 package com.merapar.fileanalyser.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.merapar.fileanalyser.exception.FileUnprocessableException;
+import com.merapar.fileanalyser.exception.FileProcessingException;
 import com.merapar.fileanalyser.request.ImmutableProcessFileRequest;
 import com.merapar.fileanalyser.response.FileDetails;
 import com.merapar.fileanalyser.response.ImmutableFileDetails;
@@ -77,7 +77,7 @@ class FileAnalyzerControllerTest {
     ImmutableProcessFileRequest processFileRequest = ImmutableProcessFileRequest.of(url);
 
     // when
-    when(fileProcessorService.processFile(url)).thenThrow(FileUnprocessableException.class);
+    when(fileProcessorService.processFile(url)).thenThrow(FileProcessingException.class);
 
     mockMvc
         .perform(
