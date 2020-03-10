@@ -34,4 +34,4 @@ At least a single Java 8 feature should be included.
    
 ## Run application
 Latest image will be pulled from Docker Hub. 
-Just copy docker-compose.yml and hit ``docker-compose up -d``
+Just copy docker-compose.yml and run ``docker-compose up -d``
