@@ -39,8 +39,4 @@ public class StatisticsProcessor {
   public FileDetails getFileDetails() {
     return FileDetails.of(fileDetails);
   }
-
-  public void setFileDetails(FileDetails fileDetails) {
-    this.fileDetails = fileDetails;
-  }
 }

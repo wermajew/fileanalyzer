@@ -14,15 +14,14 @@ import java.net.URL;
 import java.util.function.Predicate;
 
 @Component
-@Scope(value="request", proxyMode= ScopedProxyMode.TARGET_CLASS)
+@Scope(value = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class ReaderService {
 
   private static final String ROW_NAME = "row";
 
   private final Predicate<XMLStreamReader> canProcessElement =
-          e ->
-                  e.getEventType() == XMLStreamConstants.START_ELEMENT && ROW_NAME.equals(e.getLocalName());
-
+      e ->
+          e.getEventType() == XMLStreamConstants.START_ELEMENT && ROW_NAME.equals(e.getLocalName());
 
   public XMLStreamReader getEventReader(String file) {
     try {
