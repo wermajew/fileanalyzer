@@ -1,4 +1,4 @@
-package com.merapar.fileanalyser.service;
+package com.merapar.fileanalyser.calculator;
 
 import com.merapar.fileanalyser.domain.Post;
 import com.merapar.fileanalyser.response.FileDetails;
@@ -12,13 +12,13 @@ public class TotalScoreCalculator implements FileStatisticsCalculator {
 
   @Override
   public FileDetails calculate(Post post, FileDetails details) {
+    BigInteger totalPosts = details.totalPosts().add(BigInteger.ONE);
     if (post.getScore() != null) {
       BigInteger totalScore = details.totalScore().add(post.getScore());
-      BigInteger totalPosts = details.totalPosts().add(BigInteger.ONE);
       return ImmutableFileDetails.copyOf(details)
           .withTotalScore(totalScore)
           .withTotalPosts(totalPosts);
     }
-    return details;
+    return ImmutableFileDetails.copyOf(details).withTotalPosts(totalPosts);
   }
 }

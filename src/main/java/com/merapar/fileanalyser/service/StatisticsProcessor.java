@@ -1,5 +1,10 @@
 package com.merapar.fileanalyser.service;
 
+import com.merapar.fileanalyser.calculator.AcceptedPostsCalculator;
+import com.merapar.fileanalyser.calculator.FileStatisticsCalculator;
+import com.merapar.fileanalyser.calculator.FirstPostCalculator;
+import com.merapar.fileanalyser.calculator.LastPostCalculator;
+import com.merapar.fileanalyser.calculator.TotalScoreCalculator;
 import com.merapar.fileanalyser.domain.Post;
 import com.merapar.fileanalyser.response.FileDetails;
 import org.springframework.beans.factory.annotation.Autowired;

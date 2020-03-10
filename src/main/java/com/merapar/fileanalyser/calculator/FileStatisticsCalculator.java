@@ -1,4 +1,4 @@
-package com.merapar.fileanalyser.service;
+package com.merapar.fileanalyser.calculator;
 
 import com.merapar.fileanalyser.domain.Post;
 import com.merapar.fileanalyser.response.FileDetails;
